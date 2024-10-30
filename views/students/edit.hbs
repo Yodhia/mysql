@@ -23,16 +23,6 @@
         <button type="submit" class="btn btn-primary">Update Student</button>
     </div>
 
-    <div class=""mb-3>
-        <label>Classes</label>
-        <select name="class_id" class="form-control" multiple>
-            {{#each classes}}
-            <option value="{{class_id}}"
-            {{#if (inArray class_id ../relatedClasses)}} selected {{/if}}>
-                {{first_name}} {{last_name}}
-            </option>
-        </select>
-    </div>
 </form>
 
 {{/block}}

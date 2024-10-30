@@ -29,12 +29,6 @@ async function main() {
         'password': process.env.DB_PASSWORD
     })
     
-    // app.get('/classes', async (req,res)=> {
-    //     let [classes] = await connection.execute('SELECT * FROM classes INNER JOIN teachers ON classes.teacher_id = teachers.teacher_id');
-    //     res.render('classes/index', {
-    //         'classes' : classes
-    //     })
-    // })
 
     app.get('/create-students', async function(req,res) {
         res.render('create-students')
@@ -53,15 +47,6 @@ async function main() {
         let [classes] = await connection.execute('SELECT * from classes');
         res.render('students/index', { students });
     });
-
-    // app.get('/students/search', async(req,res)=>{
-    //     const {first_name, gender} = req.query;
-    //     const query = "SELECT * FROM students WHERE first_name=? AND gender=?";
-    //     const [students] = await connection.execute(query,[first_name, gender]);
-    //     res.render('students/index',{
-    //         students
-    //     });
-    // })
 
     app.get('/students/:student_id/edit', async (req,res)=>{
         let [students] = await connection.execute('SELECT * from students WHERE student_id =?',[req.params.student_id]);
