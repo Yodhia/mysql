@@ -1,0 +1,39 @@
+{{#extends "base"}}
+{{#block "title"}}Edit New Customer{{/block}}
+{{#block "content"}}
+<h1>Edit Customer</h1>
+<form method="POST">
+    <div class="mb-3">
+        <label>First Name</label>
+        <input type="text" class="form-control" name="first_name" value="{{student.first_name}}">
+    </div>
+        <div class="mb-3">
+        <label>Last Name</label>
+        <input type="text" class="form-control" name="last_name" value="{{student.last_name}}">
+    </div>
+        <div class="mb-3">
+        <label>Date Of Birth</label>
+        <input type="date" class="form-control" name="dob" value="{{student.dob}}"required>
+    </div>
+        <div class="mb-3">
+        <label>gender</label>
+        <input type="text" class="form-control" name="gender" value="{{student.gender}}">
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Update Student</button>
+    </div>
+
+    <div class=""mb-3>
+        <label>Classes</label>
+        <select name="class_id" class="form-control" multiple>
+            {{#each classes}}
+            <option value="{{class_id}}"
+            {{#if (inArray class_id ../relatedClasses)}} selected {{/if}}>
+                {{first_name}} {{last_name}}
+            </option>
+        </select>
+    </div>
+</form>
+
+{{/block}}
+{{/extends}}

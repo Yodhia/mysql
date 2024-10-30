@@ -29,12 +29,12 @@ async function main() {
         'password': process.env.DB_PASSWORD
     })
     
-    app.get('/classes', async (req,res)=> {
-        let [classes] = await connection.execute('SELECT * FROM classes INNER JOIN teachers ON classes.teacher_id = teachers.teacher_id');
-        res.render('classes/index', {
-            'classes' : classes
-        })
-    })
+    // app.get('/classes', async (req,res)=> {
+    //     let [classes] = await connection.execute('SELECT * FROM classes INNER JOIN teachers ON classes.teacher_id = teachers.teacher_id');
+    //     res.render('classes/index', {
+    //         'classes' : classes
+    //     })
+    // })
 
     app.get('/create-students', async function(req,res) {
         res.render('create-students')
@@ -50,9 +50,56 @@ async function main() {
 
     app.get('/students', async (req, res) => {
         let [students] = await connection.execute('SELECT * FROM students');
+        let [classes] = await connection.execute('SELECT * from classes');
         res.render('students/index', { students });
     });
-    
+
+    // app.get('/students/search', async(req,res)=>{
+    //     const {first_name, gender} = req.query;
+    //     const query = "SELECT * FROM students WHERE first_name=? AND gender=?";
+    //     const [students] = await connection.execute(query,[first_name, gender]);
+    //     res.render('students/index',{
+    //         students
+    //     });
+    // })
+
+    app.get('/students/:student_id/edit', async (req,res)=>{
+        let [students] = await connection.execute('SELECT * from students WHERE student_id =?',[req.params.student_id]);
+        let student = students[0];
+        res.render('students/edit', {
+            'student': student
+        })
+    })
+
+    app.post('/students/:student_id/edit', async (req, res) =>{
+        let {first_name, last_name, dob, gender} = req.body;
+        let student_id = req.params.student_id;
+         // If dob is empty, set it to NULL
+        dob = dob ? dob : null;
+        let query = 'UPDATE students SET first_name=?, last_name=?, dob=?, gender=? WHERE student_id=?';
+        let bindings = [first_name, last_name, dob, gender, student_id];
+        await connection.execute(query, bindings);
+        res.redirect('/students');
+    });
+
+
+    app.get('/students/:student_id/delete', async function (req,res){
+        //display a confirmation form
+        const[students] = await connection.execute(
+            "SELECT * FROM students WHERE student_id=?", [req.params.student_id]
+        );
+        const student = students[0];
+        res.render('students/delete',{
+            student
+        })
+    })
+
+    app.post('/students/:student_id/delete', async function (req,res){
+        await connection.execute('DELETE FROM students WHERE student_id=?',[req.params.student_id]);
+        res.redirect('/students');
+    })
+
+
     app.listen(3000,()=>{
         console.log('Server is running')
     });
